@@ -90,7 +90,10 @@ npm install
 Create a `.env` file:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api
+# Backend API URL (adjust based on your backend setup)
+VITE_API_BASE_URL=http://localhost:8000/api  # Docker (recommended)
+# VITE_API_BASE_URL=http://localhost:3000/api/v1  # Local development
+
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
@@ -104,7 +107,7 @@ VITE_APP_VERSION=1.0.0
 npm run dev
 ```
 
-Visit http://localhost:3000
+Visit http://localhost:5173
 
 ### 5. Explore the Documentation
 
@@ -121,7 +124,7 @@ All guides are in the `/docs` directory:
 
 ```bash
 # Development
-npm run dev              # Start dev server (http://localhost:3000)
+npm run dev              # Start dev server (http://localhost:5173)
 npm run build           # Build for production
 npm run preview         # Preview production build
 
