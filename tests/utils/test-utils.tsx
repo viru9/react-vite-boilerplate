@@ -1,9 +1,9 @@
-import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { type ReactElement } from 'react';
+import { render, type RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '@/features/auth/slices/authSlice';
 import exampleReducer from '@/features/example-feature/slices/exampleSlice';
 
@@ -11,11 +11,13 @@ import exampleReducer from '@/features/example-feature/slices/exampleSlice';
  * Create a test store with initial state
  */
 export function createTestStore(preloadedState?: any) {
+  const rootReducer = combineReducers({
+    auth: authReducer,
+    example: exampleReducer,
+  });
+
   return configureStore({
-    reducer: {
-      auth: authReducer,
-      example: exampleReducer,
-    },
+    reducer: rootReducer,
     preloadedState,
   });
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
 
@@ -6,7 +6,7 @@ import axiosRetry from 'axios-retry';
  * Axios instance with base configuration
  */
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
   timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ api.interceptors.response.use(
         if (refreshToken) {
           // Call refresh token endpoint
           const response = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/auth/refresh`,
+            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'}/auth/refresh`,
             { refreshToken }
           );
 

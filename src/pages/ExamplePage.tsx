@@ -2,7 +2,6 @@ import { MainLayout } from '@/components/layouts/MainLayout';
 import { ExampleList } from '@/features/example-feature';
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
