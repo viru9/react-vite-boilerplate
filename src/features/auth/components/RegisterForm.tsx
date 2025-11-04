@@ -39,7 +39,12 @@ export function RegisterForm() {
       return;
     }
 
-    const result = await register({ name, email, password });
+    // Split name into firstName and lastName
+    const nameParts = name.trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || undefined;
+
+    const result = await register({ firstName, lastName, email, password });
 
     if (result.type === 'auth/register/fulfilled') {
       navigate('/', { replace: true });

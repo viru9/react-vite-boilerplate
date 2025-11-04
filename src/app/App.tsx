@@ -14,6 +14,12 @@ const LoginPage = lazy(() =>
 const RegisterPage = lazy(() =>
   import('@/pages/RegisterPage').then((m) => ({ default: m.RegisterPage }))
 );
+const ForgotPasswordPage = lazy(() =>
+  import('@/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage }))
+);
+const ResetPasswordPage = lazy(() =>
+  import('@/pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage }))
+);
 const ExamplePage = lazy(() =>
   import('@/pages/ExamplePage').then((m) => ({ default: m.ExamplePage }))
 );
@@ -44,6 +50,22 @@ function App() {
             element={
               <ProtectedRoute requireAuth={false}>
                 <RegisterPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <ProtectedRoute requireAuth={false}>
+                <ForgotPasswordPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <ProtectedRoute requireAuth={false}>
+                <ResetPasswordPage />
               </ProtectedRoute>
             }
           />

@@ -49,7 +49,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             {user && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
-                  {user.name}
+                  {[user.firstName, user.lastName].filter(Boolean).join(' ') || user.email}
                 </span>
                 <Button onClick={handleLogout} variant="outline" size="sm">
                   Logout

@@ -61,9 +61,16 @@ export const registerUser = createAsyncThunk<
  */
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   'auth/logout',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
-      await authService.logout();
+      const state = getState() as { auth: AuthState };
+      const refreshToken = state.auth.refreshToken;
+      
+      if (!refreshToken) {
+        return rejectWithValue('No refresh token available');
+      }
+      
+      await authService.logout(refreshToken);
     } catch (error) {
       return rejectWithValue(getErrorMessage(error));
     }

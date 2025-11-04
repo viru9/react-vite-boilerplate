@@ -84,12 +84,19 @@ export function LoginForm() {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
-          <p className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link to="/register" className="text-primary hover:underline">
-              Register
-            </Link>
-          </p>
+          <div className="text-center space-y-2">
+            <p className="text-sm text-muted-foreground">
+              <Link to="/forgot-password" className="text-primary hover:underline">
+                Forgot your password?
+              </Link>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Don&apos;t have an account?{' '}
+              <Link to="/register" className="text-primary hover:underline">
+                Register
+              </Link>
+            </p>
+          </div>
         </CardFooter>
       </form>
     </Card>

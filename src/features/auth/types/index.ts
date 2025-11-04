@@ -5,7 +5,8 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
+  firstName?: string;
+  lastName?: string;
   avatar?: string;
   role: string;
 }
@@ -33,12 +34,30 @@ export interface LoginResponse {
 export interface RegisterRequest {
   email: string;
   password: string;
-  name: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface RegisterResponse {
   user: User;
   token: string;
   refreshToken: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
 }
 

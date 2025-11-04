@@ -4,6 +4,8 @@ import type {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
+  ForgotPasswordResponse,
+  ResetPasswordResponse,
   User,
 } from '../types';
 
@@ -35,8 +37,8 @@ export const authService = {
   /**
    * Logout user
    */
-  logout: async (): Promise<void> => {
-    await api.post('/auth/logout');
+  logout: async (refreshToken: string): Promise<void> => {
+    await api.post('/auth/logout', { refreshToken });
   },
 
   /**
@@ -54,6 +56,31 @@ export const authService = {
     const response = await api.post<{ token: string }>('/auth/refresh', {
       refreshToken,
     });
+    return response.data;
+  },
+
+  /**
+   * Request password reset
+   */
+  forgotPassword: async (email: string): Promise<ForgotPasswordResponse> => {
+    const response = await api.post<ForgotPasswordResponse>(
+      '/auth/forgot-password',
+      { email }
+    );
+    return response.data;
+  },
+
+  /**
+   * Reset password with token
+   */
+  resetPassword: async (
+    token: string,
+    password: string
+  ): Promise<ResetPasswordResponse> => {
+    const response = await api.post<ResetPasswordResponse>(
+      '/auth/reset-password',
+      { token, password }
+    );
     return response.data;
   },
 };
