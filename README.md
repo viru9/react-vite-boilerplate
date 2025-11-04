@@ -108,7 +108,8 @@ cp .env.example .env
 
 Example `.env`:
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api
+# Development (backend runs on port 8000 via Docker)
+VITE_API_BASE_URL=http://localhost:8000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
@@ -369,28 +370,126 @@ See [TESTING.md](docs/TESTING.md) for detailed guide.
 
 ## 🐳 Docker Deployment
 
-### Build and Run
+### Development with Backend Integration
 
 ```bash
-# Build image
-docker build -t my-app .
+# Start the backend services first
+cd ../backend
+docker-compose up -d 
 
-# Run container
-docker run -p 80:80 my-app
+# Then start the frontend
+cd ../react-boilerplate
+npm run dev
 ```
 
-### Docker Compose
+**Frontend Environment Setup:**
+```env
+# .env (for connecting to backend)
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_API_TIMEOUT=10000
+VITE_TOKEN_KEY=auth_token
+VITE_REFRESH_TOKEN_KEY=refresh_token
+```
+
+### Production Deployment
+
+#### Option 1: Standalone Frontend
+
+```bash
+# Build and run frontend only
+docker build -t my-frontend .
+docker run -p 80:80 my-frontend
+```
+
+#### Option 2: Full Stack with Backend
+
+```bash
+# Start backend production services
+cd ../backend
+cp env.prod.example .env.prod
+# Edit .env.prod with your production values
+docker-compose -f docker-compose.prod.yml up -d --build
+
+# Build and run frontend
+cd ../react-boilerplate
+docker build -t my-frontend .
+docker run -p 80:80 -e VITE_API_BASE_URL=http://localhost:8000/api/v1 my-frontend
+```
+
+### Docker Compose (Full Stack)
 
 ```yaml
 version: '3.8'
 services:
-  app:
-    build: .
+  # Frontend
+  frontend:
+    build: 
+      context: ./react-boilerplate
     ports:
       - '80:80'
     environment:
+      - VITE_API_BASE_URL=http://backend:8000/api/v1
+    depends_on:
+      - backend
+    
+  # Backend (reference backend docker-compose.prod.yml)
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - '8000:8000'
+    environment:
       - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/backend_db
+    depends_on:
+      - postgres
+      
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: backend_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
 ```
+
+### Backend Integration Guide
+
+This frontend is designed to work with the NestJS backend boilerplate:
+
+1. **Backend Setup** (Required):
+   ```bash
+   cd ../backend
+   docker-compose up -d  # Development
+   # OR
+   docker-compose -f docker-compose.prod.yml up -d --build  # Production
+   ```
+
+2. **API Endpoints Available**:
+   - Authentication: `/api/v1/auth/*`
+   - Users: `/api/v1/users/*`
+   - Health: `/api/v1/health`
+   - Storage: `/api/v1/storage/*`
+   - AI: `/api/v1/ai/*`
+
+3. **Environment Configuration**:
+   ```env
+   # Development (connects to backend dev server)
+   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   
+   # Production (connects to backend production)
+   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   ```
+
+4. **Authentication Flow**:
+   - Login/Register via `/api/v1/auth`
+   - JWT tokens stored in localStorage
+   - Automatic token refresh
+   - Protected routes with auth guards
 
 ## 📚 Documentation
 

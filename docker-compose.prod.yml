@@ -1,0 +1,21 @@
+services:
+  # React Frontend Production
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend_app_prod
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    networks:
+      - frontend_network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  frontend_network:
+    driver: bridge
