@@ -90,9 +90,11 @@ npm install
 Create a `.env` file:
 
 ```env
-# Backend API URL (adjust based on your backend setup)
-VITE_API_BASE_URL=http://localhost:3000/api/v1  # Docker (recommended)
-# VITE_API_BASE_URL=http://localhost:3000/api/v1  # Local development
+# Backend API URL (choose based on your backend setup)
+VITE_API_BASE_URL=http://localhost:8000/api/v1  # Backend Docker (recommended)
+# VITE_API_BASE_URL=http://localhost:3000/api/v1  # Backend Local
+
+# See config-templates/ directory for all development scenarios
 
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
