@@ -99,21 +99,31 @@ npm install
 
 3. **Set up environment variables**
 
-```bash
-# Copy the example env file
-cp .env.example .env
+Choose and copy the appropriate configuration template based on your development setup:
 
-# Edit .env with your configuration
+```bash
+# Choose one based on your backend setup:
+cp config-templates/local-development.env .env           # Both frontend & backend local
+cp config-templates/docker-development.env .env         # Both frontend & backend Docker  
+cp config-templates/local-frontend-docker-backend.env .env  # Frontend local, backend Docker
+cp config-templates/docker-frontend-local-backend.env .env  # Frontend Docker, backend local
+
+# See config-templates/README.md for detailed explanation
 ```
 
-Example `.env`:
+Example `.env` (copy from config-templates based on your setup):
 ```env
-# Development (backend runs on port 3000 via Docker)
+# Frontend Local → Backend Local (most common)
 VITE_API_BASE_URL=http://localhost:3000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
 VITE_APP_NAME=My App
+
+# Frontend Local → Backend Docker (alternative)
+# VITE_API_BASE_URL=http://localhost:8000/api/v1
+
+# See config-templates/ directory for all scenarios
 ```
 
 4. **Start development server**
@@ -123,6 +133,62 @@ npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 🔧 Development Scenarios
+
+Choose your development setup based on your preferences:
+
+### Scenario 1: Both Local (Recommended for beginners)
+```bash
+# Backend (Terminal 1)
+cd backend
+npm run start:dev  # Port 3000
+
+# Frontend (Terminal 2)  
+cd react-boilerplate
+cp config-templates/local-development.env .env
+npm run dev        # Port 5173 → calls localhost:3000
+```
+**Access:** Frontend at http://localhost:5173, Backend at http://localhost:3000
+
+### Scenario 2: Both Docker (Recommended for teams)
+```bash
+# Backend (Terminal 1)
+cd backend
+npm run docker:up  # Port 8000
+
+# Frontend (Terminal 2)
+cd react-boilerplate  
+cp config-templates/docker-development.env .env
+npm run docker:up  # Port 8080 → calls localhost:8000
+```
+**Access:** Frontend at http://localhost:8080, Backend at http://localhost:8000
+
+### Scenario 3: Local Frontend + Docker Backend (Best of both)
+```bash
+# Backend (Terminal 1)
+cd backend
+npm run docker:up  # Port 8000
+
+# Frontend (Terminal 2)
+cd react-boilerplate
+cp config-templates/local-frontend-docker-backend.env .env  
+npm run dev          # Port 5173 → calls localhost:8000
+```
+**Access:** Frontend at http://localhost:5173, Backend at http://localhost:8000
+
+### Scenario 4: Docker Frontend + Local Backend
+```bash
+# Backend (Terminal 1)  
+cd backend
+npm run start:dev    # Port 3000
+
+# Frontend (Terminal 2)
+cd react-boilerplate
+cp config-templates/docker-frontend-local-backend.env .env
+npm run docker:up # Port 8080 → calls localhost:3000  
+```
+**Access:** Frontend at http://localhost:8080, Backend at http://localhost:3000
 
 ## 📜 Available Scripts
 
@@ -375,7 +441,7 @@ See [TESTING.md](docs/TESTING.md) for detailed guide.
 ```bash
 # Start the backend services first
 cd ../backend
-docker-compose up -d 
+npm run docker:up 
 
 # Then start the frontend
 cd ../react-boilerplate
@@ -384,8 +450,8 @@ npm run dev
 
 **Frontend Environment Setup:**
 ```env
-# .env (for connecting to backend)
-VITE_API_BASE_URL=http://localhost:3000/api/v1
+# .env (for connecting to Docker backend)
+VITE_API_BASE_URL=http://localhost:8000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
@@ -408,12 +474,12 @@ docker run -p 80:80 my-frontend
 cd ../backend
 cp env.prod.example .env.prod
 # Edit .env.prod with your production values
-docker-compose -f docker-compose.prod.yml up -d --build
+npm run docker:prod
 
 # Build and run frontend
 cd ../react-boilerplate
 docker build -t my-frontend .
-docker run -p 80:80 -e VITE_API_BASE_URL=http://localhost:3000/api/v1 my-frontend
+docker run -p 80:80 -e VITE_API_BASE_URL=http://localhost:8000/api/v1 my-frontend
 ```
 
 ### Docker Compose (Full Stack)
@@ -464,9 +530,9 @@ This frontend is designed to work with the NestJS backend boilerplate:
 1. **Backend Setup** (Required):
    ```bash
    cd ../backend
-   docker-compose up -d  # Development
+   npm run docker:up  # Development
    # OR
-   docker-compose -f docker-compose.prod.yml up -d --build  # Production
+   npm run docker:prod  # Production
    ```
 
 2. **API Endpoints Available**:
@@ -478,11 +544,14 @@ This frontend is designed to work with the NestJS backend boilerplate:
 
 3. **Environment Configuration**:
    ```env
-   # Development (connects to backend dev server)
+   # Frontend Local → Backend Local
    VITE_API_BASE_URL=http://localhost:3000/api/v1
    
-   # Production (connects to backend production)
-   VITE_API_BASE_URL=http://localhost:3000/api/v1
+   # Frontend Local → Backend Docker (or Both Docker)
+   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   
+   # Production (domain-based)
+   VITE_API_BASE_URL=https://api.yourdomain.com/api/v1
    ```
 
 4. **Authentication Flow**:

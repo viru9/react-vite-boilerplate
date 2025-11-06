@@ -3,10 +3,25 @@ import type { InternalAxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
 
 /**
+ * Get API base URL with fallback and warning
+ */
+const getApiBaseUrl = (): string => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  console.warn(
+    'VITE_API_BASE_URL not set! Using default localhost:3000. ' +
+    'Please copy appropriate config template to .env for your development setup.'
+  );
+  return 'http://localhost:3000/api/v1';
+};
+
+/**
  * Axios instance with base configuration
  */
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1',
+  baseURL: getApiBaseUrl(),
   timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -70,7 +85,7 @@ api.interceptors.response.use(
         if (refreshToken) {
           // Call refresh token endpoint
           const response = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1'}/auth/refresh`,
+            `${getApiBaseUrl()}/auth/refresh`,
             { refreshToken }
           );
 
