@@ -25,7 +25,7 @@ export const api = axios.create({
 Create `.env` file (copy from `.env.example`):
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_API_BASE_URL=http://localhost:3000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token

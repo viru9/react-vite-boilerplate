@@ -108,8 +108,8 @@ cp .env.example .env
 
 Example `.env`:
 ```env
-# Development (backend runs on port 8000 via Docker)
-VITE_API_BASE_URL=http://localhost:8000/api/v1
+# Development (backend runs on port 3000 via Docker)
+VITE_API_BASE_URL=http://localhost:3000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
@@ -385,7 +385,7 @@ npm run dev
 **Frontend Environment Setup:**
 ```env
 # .env (for connecting to backend)
-VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_API_BASE_URL=http://localhost:3000/api/v1
 VITE_API_TIMEOUT=10000
 VITE_TOKEN_KEY=auth_token
 VITE_REFRESH_TOKEN_KEY=refresh_token
@@ -413,7 +413,7 @@ docker-compose -f docker-compose.prod.yml up -d --build
 # Build and run frontend
 cd ../react-boilerplate
 docker build -t my-frontend .
-docker run -p 80:80 -e VITE_API_BASE_URL=http://localhost:8000/api/v1 my-frontend
+docker run -p 80:80 -e VITE_API_BASE_URL=http://localhost:3000/api/v1 my-frontend
 ```
 
 ### Docker Compose (Full Stack)
@@ -479,10 +479,10 @@ This frontend is designed to work with the NestJS backend boilerplate:
 3. **Environment Configuration**:
    ```env
    # Development (connects to backend dev server)
-   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   VITE_API_BASE_URL=http://localhost:3000/api/v1
    
    # Production (connects to backend production)
-   VITE_API_BASE_URL=http://localhost:8000/api/v1
+   VITE_API_BASE_URL=http://localhost:3000/api/v1
    ```
 
 4. **Authentication Flow**:
